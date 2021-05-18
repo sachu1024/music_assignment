@@ -1,0 +1,171 @@
+
+{%extends 'layout/layout.html'%}
+{%block content%}
+<div class="m-auto p-auto">
+<div class="container cntnr "  >
+  <div class="row " style="">
+    <div class="col-lg-5">
+      <h2 class="h2"><b>Register Here</b></h2>
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+            <span class="bg-success text-white " style="padding: 6px;border-radius: 13px;"><b> {{ message }}</b></span>
+            {% endfor %}
+        {% endif %}
+      {% endwith %}
+      <form method="#" id="music-form" >
+        <div class="form-group">
+          <label for="inputEmail4" class="form-label"><b>Id :</b></label>
+          <input type="number" class="form-control" name="audio_id" id="audio_id">
+        </div>
+        <div class="form-group">
+          <label for="inputEmail4" class="form-label"><b>Title :  </b></label>
+          <input type="text" class="form-control" name="audio_title" id="audio_title" placeholder="Title of the audiobook">
+        </div>
+        <div class="form-group">
+          <label for="inputEmail4" class="form-label"><b>Author:</b></label>
+          <input type="text"  name="author" id="author" class="form-control" placeholder="Author of the title" >
+        </div>
+        <div class="form-group">
+          <label for="inputEmail4" class="form-label"><b>Narrator :</b></label>
+          <input type="text"  name="narrator" id="narrator" class="form-control" >
+        </div>
+        <div class="form-group">
+          <label for="inputEmail4" class="form-label"><b>Duration in (sec) :</b></label>
+          <input type="number" class="form-control" name="duration" id="duration">
+        </div>
+        <div class="form-group">
+          <label for="inputEmail4" class="form-label"><b>Updated Time :</b></label>
+          <input type="text"  name="date" id="date" class="form-control" >
+        </div>
+        
+        
+        
+        
+        <div class="form-group">
+          <button type="button" class="btn btn-primary btnreg" style="float:right">Register</button>
+        </div>
+      </form>   
+      
+    </div>
+    <div class="col-lg-7">
+      <div class="container">
+        <h2 class="h2"><b>Song List</b></h2>
+                    
+        <table class="table table-bordered table-success table-striped table-lg" style="margin-top:50px">
+          <thead>
+            <tr>
+              <th><b>S.No</b></th>
+              <th>Song Id</th>
+              <th>Song Name</th>
+              <th>Duration</th>
+              <th>Date</th>
+              <th>Status</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            {%for song in songs_data:%}
+            <tr>
+              <td>{{loop.index}}</td>
+              <td>{{song.song_id}}</td>
+              <td>{{song.song_name}}</td>
+              <td>{{song.duration}}</td>
+              <td>{{song.created_date}}</td>
+            
+              <td><a class="" href="/update_song/{{song.id}}"><i class="fa fa-edit" aria-hidden="true"></i></a>/<a class="" onclick="return confirm(' you want to delete?');" href="/delete_song/{{song.id}}"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+            </tr>
+            {%endfor%}
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+{% block script %}
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+  <script>
+    $('#date').mouseup(function(){
+      var dtetime=new Date().toLocaleString();
+     
+      $(this).val(dtetime);
+     
+      
+      $(this).attr('readonly', true);
+     
+  });
+  </script>
+<script>
+  $(document).ready(function(){
+    
+    $('.btnreg').click(function(){
+      var audio_id=$('#audio_id').val();
+      var audio_title=$('#audio_title').val();
+      var narrator=$('#narrator').val();
+      var duration=$('#duration').val();
+      var date=$('#date').val();
+      //alert(date);
+      var dict = {audio_id : audio_id , audio_title:audio_title,narrator:narrator,duration:duration,date:date};
+      $.ajax({
+        url:'/audio_inst',
+        method:"POST",
+        data: JSON.stringify(dict),
+        contentType: "application/json",
+        success:function(data){
+          console.log(data);
+          location.reload();
+        }
+      })
+    })
+  })
+</script>
+<script>
+$(document).ready(function() {
+
+    $.validator.addMethod('str', function(value, element) {
+        var pattern = /^[0-9a-zA-Z@_-]+$/;
+
+	return $.trim(value).match(pattern) ? true : false;
+    }, 'Must be String');
+
+$("#music-form").validate({
+	rules: {
+		song_id: {
+			required: true,
+			number: true,
+			
+		},
+		song_name:{
+			required: true,
+      maxlength:100,
+			str:true
+		},
+		duration:{
+			required: true,
+			number: true,
+      min: 0.01,
+      max:59.59
+		},
+	
+		
+		},
+		messages : {
+			song_name: {
+				minlength: "<span style='color:red'>Song Name should be at least 3 characters</span>"
+			},
+			
+			}
+});		
+		 
+		
+});
+
+</script>
+{% endblock %}
+<!--https://codesource.io/building-a-restful-crud-api-with-flask/-->
+{%endblock%}
+

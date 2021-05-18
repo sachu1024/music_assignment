@@ -1,0 +1,33 @@
+.body{
+    
+    background-color: turquoise;
+
+}
+.h2{
+    background-color: cyan;
+    text-align: center;
+    padding: 18px;
+    border-radius: 27px;
+}
+.form-label{
+    block-size: 26px;
+    font-size: 19px;
+}
+.form-control{
+    border-radius: 17px;
+}
+#music-form{
+    padding-top: 17px;
+}
+.cntnr{
+    background-color: aliceblue;
+    margin-top: 19px;
+    padding: 42px;
+    border-radius: 38px;
+}
+.btnreg{
+    float: right;
+    border-radius: 17px;
+    padding: 9px;
+
+}
